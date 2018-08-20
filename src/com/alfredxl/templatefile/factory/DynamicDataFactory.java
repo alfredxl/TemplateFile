@@ -23,11 +23,15 @@ public class DynamicDataFactory {
         return title;
     }
 
-    public static Vector<String> getClassTitle() {
+    public static Vector<String> getClassTitle(boolean showFormatCode) {
         Vector<String> title = new Vector<>();
         title.add("isEnabled");
         title.add("className");
         title.add("classPath");
+        if (showFormatCode) {
+            title.add("classNameFormat");
+            title.add("classPathFormat");
+        }
         return title;
     }
 

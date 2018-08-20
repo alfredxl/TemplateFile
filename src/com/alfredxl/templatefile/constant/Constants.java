@@ -3,6 +3,7 @@ package com.alfredxl.templatefile.constant;
 public class Constants {
     public static final String SETTING_PANEL_TIPS = "配置相关参数，将以字符串形式替换模板中的文本:";
     public static final String REGEX_DYNAMIC = "\\$[^=]+\\$";
+    public static final String REGEX_DYNAMIC_EDIT = "\\$[^=]+\\$=[^=]+";
     public static final String TITLE_DYNAMIC = "请输入key";
     public static final String MESSAGE_DYNAMIC = "key请使用\"$\"开始和结束(不能含有\"=\")";
     public static final String REGEX_TEMPLATE = "[^=]+=[^=]+";

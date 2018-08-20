@@ -40,14 +40,24 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
 
 
     static final class AddLocationAction extends TemplateAction {
+        private boolean isEdit;
 
-        AddLocationAction(List<Template> data, String regex, String title, String message, TemplateTableModel model, JBTable table, ActionListener listener) {
+        AddLocationAction(List<Template> data, String regex, String title, String message, TemplateTableModel model, JBTable table, ActionListener listener, boolean isEdit) {
             super(data, regex, title, message, model, table, listener);
+            this.isEdit = isEdit;
         }
 
         @Override
         public void actionPerformed(final ActionEvent e) {
-            Messages.showInputDialog(message, title, null, null, new InputValidator() {
+            String initialValue = null;
+            if (isEdit) {
+                int selectedIndex = table.getSelectedRow();
+                if (selectedIndex >= 0) {
+                    Template template = data.get(selectedIndex);
+                    initialValue = template.getKey() + "=" + template.getValue();
+                }
+            }
+            Messages.showInputDialog(message, title, null, initialValue, new InputValidator() {
                 @Override
                 public boolean checkInput(String s) {
                     if (s == null) {
@@ -64,8 +74,17 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
                     if (values.length == 2) {
                         value = values[1].trim();
                     }
+                    if (isEdit) {
+                        int selectedIndex = table.getSelectedRow();
+                        if (selectedIndex >= 0) {
+                            Template template = data.get(selectedIndex);
+                            template.setKey(key);
+                            template.setValue(value);
+                        }
+                    } else {
+                        data.add(new Template(true, key, value));
+                    }
                     listener.change();
-                    data.add(new Template(true, key, value));
                     model.fireTableDataChanged();
                     return true;
                 }
@@ -78,19 +97,18 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
 
     static final class RemoveLocationAction extends TemplateAction {
 
-        RemoveLocationAction(List<Template> data, String regex, String title, String message, TemplateTableModel model, JBTable table, ActionListener listener) {
-            super(data, regex, title, message, model, table, listener);
+        RemoveLocationAction(List<Template> data, TemplateTableModel model, JBTable table, ActionListener listener) {
+            super(data, null, null, null, model, table, listener);
         }
 
         @Override
         public void actionPerformed(final ActionEvent e) {
             int selectedIndex = table.getSelectedRow();
-            if (selectedIndex <= 0) {
-                return;
+            if (selectedIndex >= 0) {
+                listener.change();
+                data.remove(selectedIndex);
+                model.fireTableDataChanged();
             }
-            listener.change();
-            data.remove(selectedIndex);
-            model.fireTableDataChanged();
         }
     }
 }
