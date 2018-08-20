@@ -2,7 +2,7 @@
   <id>com.alfredxl.templatefile</id>
   <name>TemplateFile</name>
   <version>1.0</version>
-  <vendor email="32038305@qq.com" url="http://www.yourcompany.com">No Company</vendor>
+  <vendor email="32038305@qq.com" url="https://github.com/alfredxl/TemplateFile">No Company</vendor>
 
   <description><![CDATA[
       Template code generation plug-in.<br>
