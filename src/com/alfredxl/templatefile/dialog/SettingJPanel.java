@@ -1,6 +1,7 @@
 package com.alfredxl.templatefile.dialog;
 
 import com.alfredxl.templatefile.bean.Template;
+import com.alfredxl.templatefile.constant.Constants;
 import com.alfredxl.templatefile.factory.DynamicDataFactory;
 import com.alfredxl.templatefile.factory.SimpleDocumentListener;
 import com.intellij.ui.AnActionButtonRunnable;
@@ -18,12 +19,11 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Vector;
 
 public class SettingJPanel extends JPanel implements ActionListener {
 
-    private Vector<Vector<Object>> dynamicData = DynamicDataFactory.getStaticOrDynamicData();
-    private DynamicTableModel dynamicModel = new DynamicTableModel(dynamicData, DynamicDataFactory.getTitle());
+    private List<Template> dynamicList = DynamicDataFactory.getDynamicData();
+    private TemplateTableModel dynamicModel = new TemplateTableModel(dynamicList, DynamicDataFactory.getTitle());
     private JBTable dynamicTable = new JBTable(dynamicModel);
 
     private List<Template> templateList = DynamicDataFactory.getTemplateData();
@@ -35,6 +35,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
     private boolean isModified;
 
 
+
     public SettingJPanel() {
         buildRuleFilePanel();
     }
@@ -42,18 +43,22 @@ public class SettingJPanel extends JPanel implements ActionListener {
     private void buildRuleFilePanel() {
         setLayout(new VerticalLayout(10));
         setBorder(JBUI.Borders.empty(10));
-        add(new JLabel("配置相关参数，将以字符串形式替换模板中的文本:"));
+        add(new JLabel(Constants.SETTING_PANEL_TIPS));
 
         // 动态参数配置
-        add(setJBTable(dynamicTable, new DynamicAction.AddLocationAction(dynamicData, dynamicModel, dynamicTable, this, false),
-                new DynamicAction.RemoveLocationAction(dynamicData, dynamicModel, dynamicTable, this, false),
-                "动态参数列表:"));
+        add(setJBTable(dynamicTable, new TemplateAction.AddLocationAction(dynamicList, Constants.REGEX_DYNAMIC,
+                        Constants.TITLE_DYNAMIC, Constants.MESSAGE_DYNAMIC, dynamicModel, dynamicTable, this),
+                new TemplateAction.RemoveLocationAction(dynamicList, Constants.REGEX_DYNAMIC,
+                        Constants.TITLE_DYNAMIC, Constants.MESSAGE_DYNAMIC, dynamicModel, dynamicTable, this),
+                Constants.DYNAMIC_TITLE));
 
         // 类模板配置
-        JPanel classContainer = setJBTable(classTable, new TemplateAction.AddLocationAction(templateList, classModel, classTable, this),
-                new TemplateAction.RemoveLocationAction(templateList, classModel, classTable, this),
-                "模板类列表(类名可以包涵上述参数):");
-        JLabel infoLabel = new JLabel("类模板代码(注：$currentDirectory$代表当前目录)", SwingConstants.LEFT);
+        JPanel classContainer = setJBTable(classTable, new TemplateAction.AddLocationAction(templateList, Constants.REGEX_TEMPLATE,
+                        Constants.TITLE_TEMPLATE, Constants.MESSAGE_TEMPLATE, classModel, classTable, this),
+                new TemplateAction.RemoveLocationAction(templateList, Constants.REGEX_TEMPLATE,
+                        Constants.TITLE_TEMPLATE, Constants.MESSAGE_TEMPLATE, classModel, classTable, this),
+                Constants.TEMPLATE_TITLE);
+        JLabel infoLabel = new JLabel(Constants.CODE_TIPS, SwingConstants.LEFT);
         infoLabel.setBorder(JBUI.Borders.empty(8, 0, 4, 0));
         classContainer.add(infoLabel, BorderLayout.SOUTH);
         add(classContainer);
@@ -69,7 +74,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
     }
 
     private void createListener() {
-        addTableListener(dynamicTable, dynamicModel, dynamicData);
+        addTableListener(dynamicTable, dynamicModel, dynamicList);
         addTableListener(classTable, classModel, templateList);
         classTable.getSelectionModel().addListSelectionListener(e -> {
             final int selectedIndex = classTable.getSelectedRow();
@@ -77,7 +82,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
                 jTextAreaCode.setText("");
                 return;
             }
-            jTextAreaCode.setText(templateList.get(selectedIndex).getClassData());
+            jTextAreaCode.setText(templateList.get(selectedIndex).getData());
         });
         jTextAreaCode.getDocument().addDocumentListener(new SimpleDocumentListener() {
 
@@ -86,13 +91,13 @@ public class SettingJPanel extends JPanel implements ActionListener {
                 if (selectedIndex == -1) {
                     return;
                 }
-                templateList.get(selectedIndex).setClassData(jTextAreaCode.getText());
+                templateList.get(selectedIndex).setData(jTextAreaCode.getText());
             }
         });
     }
 
 
-    private void addTableListener(JBTable jbTable, AbstractTableModel model, Object data) {
+    private void addTableListener(JBTable jbTable, AbstractTableModel model, List<Template> listData) {
         jbTable.addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -100,12 +105,8 @@ public class SettingJPanel extends JPanel implements ActionListener {
                     int columnIndex = jbTable.columnAtPoint(e.getPoint()); //获取点击的列
                     int rowIndex = jbTable.rowAtPoint(e.getPoint()); //获取点击的行
                     if (columnIndex == 0) {
-                        Vector<Object> vector = (data instanceof Vector)
-                                ? (((Vector<Vector<Object>>) data).get(rowIndex))
-                                : (((Template) ((List) data).get(rowIndex)).getValueArrays());
-                        boolean isOpen = (boolean) vector.get(0);
-                        vector.remove(0);
-                        vector.insertElementAt(!isOpen, 0);
+                        Template template = listData.get(rowIndex);
+                        template.setEnabled(!template.isEnabled());
                         model.fireTableDataChanged();
                         isModified = true;
                     }
@@ -144,16 +145,18 @@ public class SettingJPanel extends JPanel implements ActionListener {
 
     @Override
     public void change() {
-        isModified = true;
+        setModified(true);
     }
 
-    public void apply() {
-        saveData();
-        isModified = false;
+    public void setModified(boolean modified) {
+        isModified = modified;
     }
 
-    private void saveData() {
-        DynamicDataFactory.setStaticOrDynamicData(dynamicData);
-        DynamicDataFactory.setTemplateData(templateList);
+    public List<Template> getDynamicList() {
+        return dynamicList;
+    }
+
+    public List<Template> getTemplateList() {
+        return templateList;
     }
 }

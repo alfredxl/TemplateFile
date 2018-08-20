@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Vector;
 
 public class DynamicDataFactory {
-    private static final String DYNAMIC_DATA = "com_paisheng_dynamic_util_td_create_class_dynamic_data";
-    private static final String TEMPLATE_DATA = "com_paisheng_dynamic_util_td_create_class_template_data";
+    private static final String DYNAMIC_DATA = "com.alfredxl.templatefile.factory.dynamic.data";
+    private static final String TEMPLATE_DATA = "com.alfredxl.templatefile.factory.template.data";
 
 
     public static Vector<String> getTitle() {
@@ -26,85 +26,46 @@ public class DynamicDataFactory {
     public static Vector<String> getClassTitle() {
         Vector<String> title = new Vector<>();
         title.add("isEnabled");
-        title.add("classType");
+        title.add("className");
         title.add("classPath");
         return title;
     }
 
 
-    public static Vector<Vector<Object>> getStaticOrDynamicData() {
-        Vector<Vector<Object>> vectors = new Vector<>();
-        String staticData = PropertiesComponent.getInstance().getValue(DYNAMIC_DATA, "");
-        try {
-            JSONObject jsonObject = new JSONObject(staticData);
-            JSONArray list = jsonObject.getJSONArray("list");
-            if (list != null && list.length() > 0) {
-                for (int i = 0; i < list.length(); i++) {
-                    JSONObject item = list.getJSONObject(i);
-                    if (item != null) {
-                        boolean isEnabled = item.getBoolean("isEnabled");
-                        String key = item.getString("key");
-                        if (checkString(key)) {
-                            Vector<Object> vectorItem = new Vector<>();
-                            vectorItem.add(isEnabled);
-                            vectorItem.add(key);
-                            vectorItem.add("");
-                            vectors.add(vectorItem);
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return vectors;
+    public static List<Template> getDynamicData() {
+        String jsonData = PropertiesComponent.getInstance().getValue(DYNAMIC_DATA, "{}");
+        return getFormatBean(jsonData, false, false);
     }
 
-    public static void setStaticOrDynamicData(Vector<Vector<Object>> vectors) {
-        if (vectors != null && vectors.size() > 0) {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                JSONArray jsonArray = new JSONArray();
-                for (Vector<Object> vectorItem : vectors) {
-                    JSONObject item = new JSONObject();
-                    item.put("isEnabled", vectorItem.get(0));
-                    item.put("key", vectorItem.get(1));
-                    item.put("value", "");
-                    jsonArray.put(item);
-                }
-                jsonObject.put("list", jsonArray);
-                PropertiesComponent.getInstance().setValue(DYNAMIC_DATA, jsonObject.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            PropertiesComponent.getInstance().setValue(DYNAMIC_DATA, "");
-        }
+    public static void setDynamicData(List<Template> templates) {
+        PropertiesComponent.getInstance().setValue(DYNAMIC_DATA, setFormatJson(templates, false, false));
     }
 
     public static List<Template> getTemplateData() {
+        String jsonData = PropertiesComponent.getInstance().getValue(TEMPLATE_DATA, "{}");
+        return getFormatBean(jsonData, true, true);
+    }
+
+    public static void setTemplateData(List<Template> list) {
+        PropertiesComponent.getInstance().setValue(TEMPLATE_DATA, setFormatJson(list, true, true));
+    }
+
+
+    private static List<Template> getFormatBean(String jsonData, boolean hasValue, boolean hasData) {
         List<Template> list = new ArrayList<>();
-        String staticData = PropertiesComponent.getInstance().getValue(TEMPLATE_DATA, "");
         try {
-            JSONObject jsonObject = new JSONObject(staticData);
+            JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("list");
             if (jsonArray != null && jsonArray.length() > 0) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject item = jsonArray.getJSONObject(i);
                     if (item != null) {
-                        boolean isOpen = item.getBoolean("isEnabled");
-                        String classType = item.getString("classType");
-                        String classPath = item.getString("classPath");
-                        String data = item.getString("data");
-                        if (data == null) {
-                            data = "";
-                        }
-                        if (checkString(classType) && checkString(classPath)) {
-                            Vector<Object> activity = new Vector<>();
-                            activity.add(isOpen);
-                            activity.add(classType);
-                            activity.add(classPath);
-                            list.add(new Template(activity, data));
+                        boolean isEnabled = item.getBoolean("isEnabled");
+                        String key = item.getString("key");
+                        String value = hasValue ? item.getString("value") : "";
+                        String data = hasData ? item.optString("data") : "";
+                        if (checkString(key) && (!hasValue || checkString(value))) {
+                            list.add(new Template(isEnabled, key, value, data));
                         }
                     }
                 }
@@ -115,27 +76,25 @@ public class DynamicDataFactory {
         return list;
     }
 
-    public static void setTemplateData(List<Template> list) {
+    private static String setFormatJson(List<Template> list, boolean hasValue, boolean hasData) {
+        JSONObject jsonObject = new JSONObject();
         if (list != null && list.size() > 0) {
             try {
-                JSONObject jsonObject = new JSONObject();
                 JSONArray jsonArray = new JSONArray();
-                for (Template templateItem : list) {
+                for (Template template : list) {
                     JSONObject jsonObjectItem = new JSONObject();
-                    jsonObjectItem.put("isEnabled", templateItem.getValueArrays().get(0));
-                    jsonObjectItem.put("classType", templateItem.getValueArrays().get(1));
-                    jsonObjectItem.put("classPath", templateItem.getValueArrays().get(2));
-                    jsonObjectItem.put("data", templateItem.getClassData());
+                    jsonObjectItem.put("isEnabled", template.isEnabled());
+                    jsonObjectItem.put("key", template.getKey());
+                    jsonObjectItem.put("value", hasValue ? template.getValue() : "");
+                    jsonObjectItem.put("data", hasData ? template.getData() : "");
                     jsonArray.put(jsonObjectItem);
                 }
                 jsonObject.put("list", jsonArray);
-                PropertiesComponent.getInstance().setValue(TEMPLATE_DATA, jsonObject.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else {
-            PropertiesComponent.getInstance().setValue(TEMPLATE_DATA, "");
         }
+        return jsonObject.toString();
     }
 
 

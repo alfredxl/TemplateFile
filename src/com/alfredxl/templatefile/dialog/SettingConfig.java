@@ -1,7 +1,7 @@
 package com.alfredxl.templatefile.dialog;
 
+import com.alfredxl.templatefile.factory.DynamicDataFactory;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +14,7 @@ public class SettingConfig implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "MVPConfig";
+        return "TemplateFile";
     }
 
     @Nullable
@@ -32,7 +32,9 @@ public class SettingConfig implements Configurable {
     }
 
     @Override
-    public void apply() throws ConfigurationException {
-        settingJPanel.apply();
+    public void apply() {
+        DynamicDataFactory.setDynamicData(settingJPanel.getDynamicList());
+        DynamicDataFactory.setTemplateData(settingJPanel.getTemplateList());
+        settingJPanel.setModified(false);
     }
 }

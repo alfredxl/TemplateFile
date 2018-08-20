@@ -45,6 +45,13 @@ public class TemplateTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return templateList.get(rowIndex).getValueArrays().get(columnIndex);
+        if (columnIndex == 0) {
+            return templateList.get(rowIndex).isEnabled();
+        } else if (columnIndex == 1) {
+            return templateList.get(rowIndex).getKey();
+        } else if (columnIndex == 2) {
+            return templateList.get(rowIndex).getValue();
+        }
+        return null;
     }
 }
