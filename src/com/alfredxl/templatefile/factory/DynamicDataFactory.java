@@ -1,6 +1,7 @@
 package com.alfredxl.templatefile.factory;
 
 import com.alfredxl.templatefile.bean.Template;
+import com.alfredxl.templatefile.constant.Constants;
 import com.intellij.ide.util.PropertiesComponent;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -37,6 +38,14 @@ public class DynamicDataFactory {
         return title;
     }
 
+    public static List<Template> getDefaultDynamicData(FormatFactory formatFactory) {
+        List<Template> defaultList = new ArrayList<>();
+        defaultList.add(new Template(true, "$CDS$",
+                formatFactory != null ? formatFactory.getCurrentPath() : Constants.CURRENT_PATH));
+        defaultList.add(new Template(true, "$CDP$",
+                formatFactory != null ? formatFactory.getPackageName() : Constants.CURRENT_PACKAGE_PATH));
+        return defaultList;
+    }
 
     public static List<Template> getDynamicData() {
         String jsonData = PropertiesComponent.getInstance().getValue(DYNAMIC_DATA, "{}");

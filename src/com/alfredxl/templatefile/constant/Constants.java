@@ -12,6 +12,9 @@ public class Constants {
     public static final String TITLE_TEMPLATE = "Please enter className and classPath";
     public static final String MESSAGE_TEMPLATE = "className and classPath use \"=\" link";
     public static final String DYNAMIC_TITLE = "Dynamic parameter list";
+    public static final String DEFAULT_DYNAMIC_TITLE = "Default dynamic parameter list";
     public static final String TEMPLATE_TITLE = "Template list(Configurable dynamic parameters):";
     public static final String CODE_TIPS = "Template code";
+    public static final String CURRENT_PATH = "Current path";
+    public static final String CURRENT_PACKAGE_PATH = "Current package path";
 }

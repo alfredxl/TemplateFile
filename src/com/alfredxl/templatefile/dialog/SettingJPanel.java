@@ -21,15 +21,19 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SettingJPanel extends JPanel implements ActionListener {
+    private List<Template> defaultDynamicList = new ArrayList<>();
+    private TemplateTableModel defaultDynamicModel;
+    private JBTable defaultDynamicTable;
 
-    private List<Template> dynamicList;
+    private List<Template> dynamicList = new ArrayList<>();
     private TemplateTableModel dynamicModel;
     private JBTable dynamicTable;
 
-    private List<Template> templateList;
+    private List<Template> templateList = new ArrayList<>();
     private TemplateTableModel classModel;
     private JBTable classTable;
 
@@ -48,14 +52,19 @@ public class SettingJPanel extends JPanel implements ActionListener {
     public SettingJPanel(boolean showFormatCode, FormatFactory formatFactory) {
         this.showFormatCode = showFormatCode;
         this.formatFactory = formatFactory;
-        dynamicList = DynamicDataFactory.getDynamicData();
-        dynamicModel = new TemplateTableModel(dynamicList, dynamicList, DynamicDataFactory.getTitle(showFormatCode), showFormatCode,
-                formatFactory);
+        defaultDynamicList.addAll(DynamicDataFactory.getDefaultDynamicData(formatFactory));
+        defaultDynamicModel = new TemplateTableModel(defaultDynamicList, dynamicList,
+                defaultDynamicList, DynamicDataFactory.getTitle(true), showFormatCode, formatFactory);
+        defaultDynamicTable = new JBTable(defaultDynamicModel);
+
+        dynamicList.addAll(DynamicDataFactory.getDynamicData());
+        dynamicModel = new TemplateTableModel(dynamicList, dynamicList, defaultDynamicList,
+                DynamicDataFactory.getTitle(showFormatCode), showFormatCode, formatFactory);
         dynamicTable = new JBTable(dynamicModel);
 
-        templateList = DynamicDataFactory.getTemplateData();
-        classModel = new TemplateTableModel(templateList, dynamicList, DynamicDataFactory.getClassTitle(showFormatCode),
-                showFormatCode, formatFactory);
+        templateList.addAll(DynamicDataFactory.getTemplateData());
+        classModel = new TemplateTableModel(templateList, dynamicList, defaultDynamicList,
+                DynamicDataFactory.getClassTitle(showFormatCode), showFormatCode, formatFactory);
         classTable = new JBTable(classModel);
         buildRuleFilePanel();
     }
@@ -65,13 +74,17 @@ public class SettingJPanel extends JPanel implements ActionListener {
         setBorder(JBUI.Borders.empty(10));
         add(new JLabel(Constants.SETTING_PANEL_TIPS));
 
+        // 静态参数
+        add(setJBTable(defaultDynamicTable, null, null, null,
+                Constants.DEFAULT_DYNAMIC_TITLE, 500, 80));
+
         // 动态参数配置
         add(setJBTable(dynamicTable, new TemplateAction.AddOrEditLocationAction(dynamicList,
                         dynamicModel, dynamicTable, this, true, showFormatCode, false),
                 new TemplateAction.RemoveLocationAction(dynamicList, dynamicModel, dynamicTable, this),
                 new TemplateAction.AddOrEditLocationAction(dynamicList,
                         dynamicModel, dynamicTable, this, true, showFormatCode, true),
-                Constants.DYNAMIC_TITLE));
+                Constants.DYNAMIC_TITLE, 500, 120));
 
         // 类模板配置
         JPanel classContainer = setJBTable(classTable, new TemplateAction.AddOrEditLocationAction(templateList,
@@ -79,7 +92,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
                 new TemplateAction.RemoveLocationAction(templateList, classModel, classTable, this),
                 new TemplateAction.AddOrEditLocationAction(templateList,
                         classModel, classTable, this, false, false, true),
-                Constants.TEMPLATE_TITLE);
+                Constants.TEMPLATE_TITLE, 500, 120);
         JLabel infoLabel = new JLabel(Constants.CODE_TIPS, SwingConstants.LEFT);
         infoLabel.setBorder(JBUI.Borders.empty(8, 0, 4, 0));
         classContainer.add(infoLabel, BorderLayout.SOUTH);
@@ -89,13 +102,13 @@ public class SettingJPanel extends JPanel implements ActionListener {
         JPanel jPanelCode = new JPanel(new HorizontalLayout(5));
         jTextAreaCode = new JTextArea();
         JBScrollPane jScrollPane = new JBScrollPane(jTextAreaCode);
-        jScrollPane.setPreferredSize(new Dimension(750, 500));
+        jScrollPane.setPreferredSize(new Dimension(750, 400));
         jPanelCode.add(jScrollPane);
         if (showFormatCode) {
             jTextAreaCodeFormat = new JTextPane();
             jTextAreaCodeFormat.setEditable(false);
             JBScrollPane jScrollPaneFormat = new JBScrollPane(jTextAreaCodeFormat);
-            jScrollPaneFormat.setPreferredSize(new Dimension(750, 500));
+            jScrollPaneFormat.setPreferredSize(new Dimension(750, 400));
             jPanelCode.add(jScrollPaneFormat);
         }
         add(jPanelCode);
@@ -139,7 +152,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
         if (jTextAreaCodeFormat != null) {
             String data;
             if (showFormatCode && formatFactory != null) {
-                data = formatFactory.formatData(dynamicList, oldData);
+                data = formatFactory.formatData(dynamicList, defaultDynamicList, oldData);
             } else {
                 data = oldData;
             }
@@ -168,7 +181,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
 
 
     private JPanel setJBTable(JBTable jbTable, AnActionButtonRunnable addAction, AnActionButtonRunnable removeAction,
-                              AnActionButtonRunnable editAction, String title) {
+                              AnActionButtonRunnable editAction, String title, int width, int height) {
         jbTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         jbTable.setStriped(true);
         jbTable.getTableHeader().setReorderingAllowed(false);
@@ -177,7 +190,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
         toolbarDecorator.setAddAction(addAction);
         toolbarDecorator.setRemoveAction(removeAction);
         toolbarDecorator.setEditAction(editAction);
-        toolbarDecorator.setPreferredSize(new Dimension(500, 120));
+        toolbarDecorator.setPreferredSize(new Dimension(width, height));
         JPanel container = new JPanel(new BorderLayout());
         container.add(new TitledSeparator(title), BorderLayout.NORTH);
         container.add(toolbarDecorator.createPanel(), BorderLayout.CENTER);
@@ -205,6 +218,10 @@ public class SettingJPanel extends JPanel implements ActionListener {
 
     public void setModified(boolean modified) {
         isModified = modified;
+    }
+
+    public List<Template> getDefaultDynamicList() {
+        return defaultDynamicList;
     }
 
     public List<Template> getDynamicList() {

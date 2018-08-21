@@ -10,15 +10,17 @@ import java.util.Vector;
 
 public class TemplateTableModel extends AbstractTableModel {
     private List<Template> templateList;
-    private List<Template> formatList;
+    private List<Template> dynamicList;
+    private List<Template> defaultDynamicList;
     private Vector<String> columnNames;
     private boolean showFormatCode;
     private FormatFactory formatFactory;
 
-    public TemplateTableModel(List<Template> templateList, List<Template> formatList, Vector<String> columnNames,
-                              boolean showFormatCode, FormatFactory formatFactory) {
+    public TemplateTableModel(List<Template> templateList, List<Template> dynamicList, List<Template> defaultDynamicList,
+                              Vector<String> columnNames, boolean showFormatCode, FormatFactory formatFactory) {
         this.templateList = templateList;
-        this.formatList = formatList;
+        this.dynamicList = dynamicList;
+        this.defaultDynamicList = defaultDynamicList;
         this.columnNames = columnNames;
         this.showFormatCode = showFormatCode;
         this.formatFactory = formatFactory;
@@ -69,7 +71,7 @@ public class TemplateTableModel extends AbstractTableModel {
 
     private String formatData(String value) {
         if (showFormatCode && formatFactory != null) {
-            return formatFactory.formatData(formatList, value);
+            return formatFactory.formatData(dynamicList, defaultDynamicList, value);
         } else {
             return value;
         }
