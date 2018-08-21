@@ -21,7 +21,7 @@ public class SettingConfig implements Configurable {
     @Override
     public JComponent createComponent() {
         if (settingJPanel == null) {
-            settingJPanel = new SettingJPanel(null);
+            settingJPanel = new SettingJPanel();
         }
         return settingJPanel;
     }

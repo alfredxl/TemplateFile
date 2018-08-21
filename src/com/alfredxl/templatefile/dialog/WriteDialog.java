@@ -7,7 +7,9 @@ import java.awt.*;
 
 public class WriteDialog extends JFrame {
     private FormatFactory formatFactory;
-    public WriteDialog(FormatFactory formatFactory){
+
+    public WriteDialog(FormatFactory formatFactory) {
+        super("WriteTemplate");
         this.formatFactory = formatFactory;
         initView();
     }
@@ -17,12 +19,12 @@ public class WriteDialog extends JFrame {
         setContentPane(jPanel);
     }
 
-    public void outShow(){
+    public void outShow() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         pack();
         setVisible(true);
         int w = (Toolkit.getDefaultToolkit().getScreenSize().width - getWidth()) / 2;
         int h = (Toolkit.getDefaultToolkit().getScreenSize().height - getHeight()) / 2;
-        setLocation(w, h);
+        setLocation(w, h - 20);
     }
 }

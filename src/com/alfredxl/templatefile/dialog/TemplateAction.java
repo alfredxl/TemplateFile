@@ -1,6 +1,7 @@
 package com.alfredxl.templatefile.dialog;
 
 import com.alfredxl.templatefile.bean.Template;
+import com.alfredxl.templatefile.constant.Constants;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.AnActionButton;
@@ -38,12 +39,15 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
         actionPerformed(null);
     }
 
-
-    static final class AddLocationAction extends TemplateAction {
+    static final class AddOrEditLocationAction extends TemplateAction {
         private boolean isEdit;
 
-        AddLocationAction(List<Template> data, String regex, String title, String message, TemplateTableModel model, JBTable table, ActionListener listener, boolean isEdit) {
-            super(data, regex, title, message, model, table, listener);
+        AddOrEditLocationAction(List<Template> data, TemplateTableModel model, JBTable table, ActionListener listener,
+                                boolean isDynamic, boolean dynamicHasValue, boolean isEdit) {
+            super(data, isDynamic ? (dynamicHasValue ? Constants.REGEX_DYNAMIC_HAS_VALUE : Constants.REGEX_DYNAMIC) : Constants.REGEX_TEMPLATE,
+                    isDynamic ? (dynamicHasValue ? Constants.TITLE_DYNAMIC_HAS_VALUE : Constants.TITLE_DYNAMIC) : Constants.TITLE_TEMPLATE,
+                    isDynamic ? (dynamicHasValue ? Constants.MESSAGE_DYNAMIC_HAS_VALUE : Constants.MESSAGE_DYNAMIC) : Constants.MESSAGE_TEMPLATE,
+                    model, table, listener);
             this.isEdit = isEdit;
         }
 
@@ -54,7 +58,10 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
                 int selectedIndex = table.getSelectedRow();
                 if (selectedIndex >= 0) {
                     Template template = data.get(selectedIndex);
-                    initialValue = template.getKey() + "=" + template.getValue();
+                    initialValue = template.getKey();
+                    if (template.getValue() != null && template.getValue().trim().length() > 0) {
+                        initialValue = initialValue + "=" + template.getValue();
+                    }
                 }
             }
             Messages.showInputDialog(message, title, null, initialValue, new InputValidator() {
@@ -76,7 +83,7 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
                     }
                     if (isEdit) {
                         int selectedIndex = table.getSelectedRow();
-                        if (selectedIndex >= 0) {
+                        if (selectedIndex >= 0 && selectedIndex < data.size()) {
                             Template template = data.get(selectedIndex);
                             template.setKey(key);
                             template.setValue(value);
@@ -89,11 +96,8 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
                     return true;
                 }
             });
-
-
         }
     }
-
 
     static final class RemoveLocationAction extends TemplateAction {
 

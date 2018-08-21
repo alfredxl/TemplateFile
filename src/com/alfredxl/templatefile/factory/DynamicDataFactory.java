@@ -15,11 +15,13 @@ public class DynamicDataFactory {
     private static final String TEMPLATE_DATA = "com.alfredxl.templatefile.factory.template.data";
 
 
-    public static Vector<String> getTitle() {
+    public static Vector<String> getTitle(boolean showFormatCode) {
         Vector<String> title = new Vector<>();
         title.add("isEnabled");
         title.add("key");
-        title.add("value");
+        if (showFormatCode) {
+            title.add("value");
+        }
         return title;
     }
 

@@ -41,15 +41,15 @@ public class SettingJPanel extends JPanel implements ActionListener {
     private FormatFactory formatFactory;
     private ListSelectionListener listSelectionListener;
 
-    public SettingJPanel(FormatFactory formatFactory) {
-        this(false, formatFactory);
+    public SettingJPanel() {
+        this(false, null);
     }
 
     public SettingJPanel(boolean showFormatCode, FormatFactory formatFactory) {
         this.showFormatCode = showFormatCode;
         this.formatFactory = formatFactory;
         dynamicList = DynamicDataFactory.getDynamicData();
-        dynamicModel = new TemplateTableModel(dynamicList, dynamicList, DynamicDataFactory.getTitle(), showFormatCode,
+        dynamicModel = new TemplateTableModel(dynamicList, dynamicList, DynamicDataFactory.getTitle(showFormatCode), showFormatCode,
                 formatFactory);
         dynamicTable = new JBTable(dynamicModel);
 
@@ -66,19 +66,19 @@ public class SettingJPanel extends JPanel implements ActionListener {
         add(new JLabel(Constants.SETTING_PANEL_TIPS));
 
         // 动态参数配置
-        add(setJBTable(dynamicTable, new TemplateAction.AddLocationAction(dynamicList, Constants.REGEX_DYNAMIC,
-                        Constants.TITLE_DYNAMIC, Constants.MESSAGE_DYNAMIC, dynamicModel, dynamicTable, this, false),
+        add(setJBTable(dynamicTable, new TemplateAction.AddOrEditLocationAction(dynamicList,
+                        dynamicModel, dynamicTable, this, true, showFormatCode, false),
                 new TemplateAction.RemoveLocationAction(dynamicList, dynamicModel, dynamicTable, this),
-                new TemplateAction.AddLocationAction(dynamicList, Constants.REGEX_DYNAMIC_EDIT,
-                        Constants.TITLE_DYNAMIC, Constants.MESSAGE_DYNAMIC, dynamicModel, dynamicTable, this, true),
+                new TemplateAction.AddOrEditLocationAction(dynamicList,
+                        dynamicModel, dynamicTable, this, true, showFormatCode, true),
                 Constants.DYNAMIC_TITLE));
 
         // 类模板配置
-        JPanel classContainer = setJBTable(classTable, new TemplateAction.AddLocationAction(templateList, Constants.REGEX_TEMPLATE,
-                        Constants.TITLE_TEMPLATE, Constants.MESSAGE_TEMPLATE, classModel, classTable, this, false),
+        JPanel classContainer = setJBTable(classTable, new TemplateAction.AddOrEditLocationAction(templateList,
+                        classModel, classTable, this, false, false, false),
                 new TemplateAction.RemoveLocationAction(templateList, classModel, classTable, this),
-                new TemplateAction.AddLocationAction(templateList, Constants.REGEX_TEMPLATE,
-                        Constants.TITLE_TEMPLATE, Constants.MESSAGE_TEMPLATE, classModel, classTable, this, true),
+                new TemplateAction.AddOrEditLocationAction(templateList,
+                        classModel, classTable, this, false, false, true),
                 Constants.TEMPLATE_TITLE);
         JLabel infoLabel = new JLabel(Constants.CODE_TIPS, SwingConstants.LEFT);
         infoLabel.setBorder(JBUI.Borders.empty(8, 0, 4, 0));
