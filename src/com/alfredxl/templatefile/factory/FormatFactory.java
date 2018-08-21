@@ -13,7 +13,11 @@ public class FormatFactory {
     private static final String CDP = "$CDP$";
 
     public FormatFactory(String sourceRootFilePath, String currentPath) {
-        this.packageName = currentPath.substring(sourceRootFilePath.length() + 1).replace("/", ".").replace("\\", ".");
+        if (sourceRootFilePath.equals(currentPath)) {
+            this.packageName = "";
+        } else {
+            this.packageName = currentPath.substring(sourceRootFilePath.length() + 1).replace("/", ".").replace("\\", ".");
+        }
         this.currentPath = currentPath;
     }
 

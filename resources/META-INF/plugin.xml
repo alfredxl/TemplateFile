@@ -32,9 +32,9 @@
   </extensions>
 
   <actions>
-    <action id="com.alfredxl.templatefile.TemplateFilePlugin" class="com.alfredxl.templatefile.TemplateFilePlugin" text="模板代码生成"
-            description="模板代码生成">
-      <add-to-group group-id="NewGroup" anchor="first"/>
+    <action id="com.alfredxl.templatefile.TemplateFilePlugin" class="com.alfredxl.templatefile.TemplateFilePlugin" text="TemplateFile"
+            description="TemplateFileWrite">
+      <add-to-group group-id="NewGroup" anchor="last"/>
     </action>
   </actions>
 
