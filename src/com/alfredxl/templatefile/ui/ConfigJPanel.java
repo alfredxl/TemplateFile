@@ -90,7 +90,7 @@ public class ConfigJPanel extends JPanel implements TemplateAction.ActionListene
 
         // 静态参数
         add(setJBTable(defaultDynamicTable, null, null, null,
-                Constants.DEFAULT_DYNAMIC_TITLE, 500, 95));
+                Constants.DEFAULT_DYNAMIC_TITLE, 500, 100));
 
         // 动态参数配置
         add(setJBTable(dynamicTable, new TemplateAction.AddOrEditLocationAction(dynamicList,
