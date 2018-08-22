@@ -48,7 +48,7 @@ public class FormatFactory {
     private String conversion(String key, String value, String data) {
         String tempKey = "^" + key + "^";
         data = data.replace(tempKey, value.toLowerCase());
-        data = data.replace(key, value.toLowerCase());
+        data = data.replace(key, value);
         return data;
     }
 }
