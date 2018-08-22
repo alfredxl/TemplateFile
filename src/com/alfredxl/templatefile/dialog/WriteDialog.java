@@ -2,6 +2,7 @@ package com.alfredxl.templatefile.dialog;
 
 import com.alfredxl.templatefile.bean.Template;
 import com.alfredxl.templatefile.factory.FormatFactory;
+import com.alfredxl.templatefile.ui.ConfigJPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.panels.VerticalLayout;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class WriteDialog extends JFrame implements ActionListener {
     private FormatFactory formatFactory;
-    private SettingJPanel jPanelContent;
+    private ConfigJPanel jPanelContent;
     private Listener listener;
 
     public WriteDialog(FormatFactory formatFactory, Listener listener) {
@@ -25,7 +26,7 @@ public class WriteDialog extends JFrame implements ActionListener {
 
     private void initView() {
         JPanel jPanelMain = new JPanel(new VerticalLayout(2));
-        jPanelContent = new SettingJPanel(true, formatFactory);
+        jPanelContent = new ConfigJPanel(true, formatFactory);
         JBScrollPane jScrollPane = new JBScrollPane(jPanelContent);
         jScrollPane.setPreferredSize(new Dimension(1550, 900));
         jPanelMain.add(jScrollPane);
@@ -35,6 +36,12 @@ public class WriteDialog extends JFrame implements ActionListener {
         jButtonOK.addActionListener(this);
         jPanelMain.add(bottomJPanel);
         setContentPane(jPanelMain);
+    }
+
+    public void addData(List<Template> defaultDynamicList, List<Template> dynamicList, List<Template> templateList) {
+        if (jPanelContent != null) {
+            jPanelContent.addData(defaultDynamicList, dynamicList, templateList);
+        }
     }
 
     public void outShow() {

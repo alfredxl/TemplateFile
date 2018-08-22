@@ -1,7 +1,8 @@
-package com.alfredxl.templatefile.dialog;
+package com.alfredxl.templatefile.ui;
 
 import com.alfredxl.templatefile.bean.Template;
 import com.alfredxl.templatefile.constant.Constants;
+import com.alfredxl.templatefile.model.TemplateTableModel;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.AnActionButton;
@@ -114,5 +115,9 @@ abstract class TemplateAction extends AbstractAction implements AnActionButtonRu
                 model.fireTableDataChanged();
             }
         }
+    }
+
+    public static interface ActionListener {
+        void change();
     }
 }

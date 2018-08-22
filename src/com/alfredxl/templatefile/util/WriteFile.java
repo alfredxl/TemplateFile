@@ -1,4 +1,4 @@
-package com.alfredxl.templatefile.factory;
+package com.alfredxl.templatefile.util;
 
 import com.alfredxl.templatefile.bean.Template;
 import com.intellij.openapi.command.WriteCommandAction;

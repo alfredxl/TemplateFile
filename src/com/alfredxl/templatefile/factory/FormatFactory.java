@@ -5,16 +5,22 @@ import com.alfredxl.templatefile.bean.Template;
 import java.util.List;
 
 public class FormatFactory {
+    private String baseDir;
     private String packageName;
     private String currentPath;
 
-    public FormatFactory(String sourceRootFilePath, String currentPath) {
+    public FormatFactory(String baseDir, String sourceRootFilePath, String currentPath) {
+        this.baseDir = baseDir;
         if (sourceRootFilePath.equals(currentPath)) {
             this.packageName = "";
         } else {
             this.packageName = currentPath.substring(sourceRootFilePath.length() + 1).replace("/", ".");
         }
         this.currentPath = currentPath;
+    }
+
+    public String getBaseDir() {
+        return baseDir;
     }
 
     public String getPackageName() {

@@ -1,4 +1,4 @@
-package com.alfredxl.templatefile.factory;
+package com.alfredxl.templatefile.impl;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;

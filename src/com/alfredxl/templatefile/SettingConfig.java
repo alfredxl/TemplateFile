@@ -1,11 +1,14 @@
-package com.alfredxl.templatefile.dialog;
+package com.alfredxl.templatefile;
 
+import com.alfredxl.templatefile.bean.Template;
 import com.alfredxl.templatefile.factory.DynamicDataFactory;
+import com.alfredxl.templatefile.ui.SettingJPanel;
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.List;
 
 public class SettingConfig implements Configurable {
     private SettingJPanel settingJPanel;
@@ -22,6 +25,10 @@ public class SettingConfig implements Configurable {
     public JComponent createComponent() {
         if (settingJPanel == null) {
             settingJPanel = new SettingJPanel();
+            List<Template> defaultDynamicList = DynamicDataFactory.getDefaultDynamicData(null);
+            List<Template> dynamicList = DynamicDataFactory.getDynamicData();
+            List<Template> templateList = DynamicDataFactory.getTemplateData();
+            settingJPanel.addData(defaultDynamicList, dynamicList, templateList);
         }
         return settingJPanel;
     }

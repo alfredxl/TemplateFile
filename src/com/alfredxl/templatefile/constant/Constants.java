@@ -15,6 +15,7 @@ public class Constants {
     public static final String DEFAULT_DYNAMIC_TITLE = "Default dynamic parameter list";
     public static final String TEMPLATE_TITLE = "Template list(Configurable dynamic parameters):";
     public static final String CODE_TIPS = "Template code";
+    public static final String BASE_DIR = "Base dir";
     public static final String CURRENT_PATH = "Current path";
     public static final String CURRENT_PACKAGE_PATH = "Current package path";
 }

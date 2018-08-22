@@ -1,4 +1,4 @@
-package com.alfredxl.templatefile.dialog;
+package com.alfredxl.templatefile.model;
 
 
 import com.alfredxl.templatefile.bean.Template;

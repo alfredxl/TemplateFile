@@ -2,8 +2,9 @@ package com.alfredxl.templatefile;
 
 import com.alfredxl.templatefile.bean.Template;
 import com.alfredxl.templatefile.dialog.WriteDialog;
+import com.alfredxl.templatefile.factory.DynamicDataFactory;
 import com.alfredxl.templatefile.factory.FormatFactory;
-import com.alfredxl.templatefile.factory.WriteFile;
+import com.alfredxl.templatefile.util.WriteFile;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -31,11 +32,17 @@ public class TemplateFilePlugin extends AnAction implements WriteDialog.Listener
                 // 默认的代码包root路径
                 VirtualFile sourceRootFile = fileIndex.getSourceRootForFile(mVirtualFile);
                 if (sourceRootFile != null) {
-                    FormatFactory formatFactory = new FormatFactory(sourceRootFile.getPath(), mVirtualFile.getPath());
-                    new WriteDialog(formatFactory, this).outShow();
+                    FormatFactory formatFactory = new FormatFactory(project.getBasePath(),
+                            sourceRootFile.getPath(), mVirtualFile.getPath());
+                    List<Template> defaultDynamicList = DynamicDataFactory.getDefaultDynamicData(formatFactory);
+                    List<Template> dynamicList = DynamicDataFactory.getDynamicData();
+                    List<Template> templateList = DynamicDataFactory.getTemplateData();
+                    WriteDialog writeDialog = new WriteDialog(formatFactory, this);
+                    writeDialog.addData(defaultDynamicList, dynamicList, templateList);
+                    writeDialog.outShow();
                 }
             } else {
-                Messages.showInfoMessage("请选中包路径", "提示");
+                Messages.showInfoMessage("Please check the package path", "Tips");
             }
         }
 

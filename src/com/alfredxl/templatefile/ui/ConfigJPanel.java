@@ -1,10 +1,11 @@
-package com.alfredxl.templatefile.dialog;
+package com.alfredxl.templatefile.ui;
 
 import com.alfredxl.templatefile.bean.Template;
 import com.alfredxl.templatefile.constant.Constants;
 import com.alfredxl.templatefile.factory.DynamicDataFactory;
 import com.alfredxl.templatefile.factory.FormatFactory;
-import com.alfredxl.templatefile.factory.SimpleDocumentListener;
+import com.alfredxl.templatefile.impl.SimpleDocumentListener;
+import com.alfredxl.templatefile.model.TemplateTableModel;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.TitledSeparator;
 import com.intellij.ui.ToolbarDecorator;
@@ -24,7 +25,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingJPanel extends JPanel implements ActionListener {
+public class ConfigJPanel extends JPanel implements TemplateAction.ActionListener {
     private List<Template> defaultDynamicList = new ArrayList<>();
     private TemplateTableModel defaultDynamicModel;
     private JBTable defaultDynamicTable;
@@ -45,28 +46,41 @@ public class SettingJPanel extends JPanel implements ActionListener {
     private FormatFactory formatFactory;
     private ListSelectionListener listSelectionListener;
 
-    public SettingJPanel() {
+    public ConfigJPanel() {
         this(false, null);
     }
 
-    public SettingJPanel(boolean showFormatCode, FormatFactory formatFactory) {
+    public ConfigJPanel(boolean showFormatCode, FormatFactory formatFactory) {
         this.showFormatCode = showFormatCode;
         this.formatFactory = formatFactory;
-        defaultDynamicList.addAll(DynamicDataFactory.getDefaultDynamicData(formatFactory));
         defaultDynamicModel = new TemplateTableModel(defaultDynamicList, dynamicList,
                 defaultDynamicList, DynamicDataFactory.getTitle(true), showFormatCode, formatFactory);
         defaultDynamicTable = new JBTable(defaultDynamicModel);
 
-        dynamicList.addAll(DynamicDataFactory.getDynamicData());
         dynamicModel = new TemplateTableModel(dynamicList, dynamicList, defaultDynamicList,
                 DynamicDataFactory.getTitle(showFormatCode), showFormatCode, formatFactory);
         dynamicTable = new JBTable(dynamicModel);
 
-        templateList.addAll(DynamicDataFactory.getTemplateData());
         classModel = new TemplateTableModel(templateList, dynamicList, defaultDynamicList,
                 DynamicDataFactory.getClassTitle(showFormatCode), showFormatCode, formatFactory);
         classTable = new JBTable(classModel);
         buildRuleFilePanel();
+    }
+
+
+    public void addData(List<Template> defaultDynamicList, List<Template> dynamicList, List<Template> templateList) {
+        if (defaultDynamicList != null) {
+            this.defaultDynamicList.addAll(defaultDynamicList);
+        }
+        if (dynamicList != null) {
+            this.dynamicList.addAll(dynamicList);
+        }
+        if (templateList != null) {
+            this.templateList.addAll(templateList);
+        }
+        defaultDynamicModel.fireTableDataChanged();
+        dynamicModel.fireTableDataChanged();
+        classModel.fireTableDataChanged();
     }
 
     private void buildRuleFilePanel() {
@@ -76,7 +90,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
 
         // 静态参数
         add(setJBTable(defaultDynamicTable, null, null, null,
-                Constants.DEFAULT_DYNAMIC_TITLE, 500, 80));
+                Constants.DEFAULT_DYNAMIC_TITLE, 500, 95));
 
         // 动态参数配置
         add(setJBTable(dynamicTable, new TemplateAction.AddOrEditLocationAction(dynamicList,
@@ -141,6 +155,7 @@ public class SettingJPanel extends JPanel implements ActionListener {
                 if (selectedIndex == -1) {
                     return;
                 }
+                isModified = true;
                 String data = jTextAreaCode.getText();
                 templateList.get(selectedIndex).setData(jTextAreaCode.getText());
                 reSetTextAreaCodeFormat(data);

@@ -29,17 +29,19 @@ public class DynamicDataFactory {
     public static Vector<String> getClassTitle(boolean showFormatCode) {
         Vector<String> title = new Vector<>();
         title.add("isEnabled");
-        title.add("className");
-        title.add("classPath");
+        title.add("FileName");
+        title.add("FilePath");
         if (showFormatCode) {
-            title.add("classNameFormat");
-            title.add("classPathFormat");
+            title.add("FileFormat");
+            title.add("FileFormat");
         }
         return title;
     }
 
     public static List<Template> getDefaultDynamicData(FormatFactory formatFactory) {
         List<Template> defaultList = new ArrayList<>();
+        defaultList.add(new Template(true, "$BD$",
+                formatFactory != null ? formatFactory.getBaseDir() : Constants.BASE_DIR));
         defaultList.add(new Template(true, "$CDS$",
                 formatFactory != null ? formatFactory.getCurrentPath() : Constants.CURRENT_PATH));
         defaultList.add(new Template(true, "$CDP$",
@@ -66,7 +68,7 @@ public class DynamicDataFactory {
     }
 
 
-    private static List<Template> getFormatBean(String jsonData, boolean hasValue, boolean hasData) {
+    public static List<Template> getFormatBean(String jsonData, boolean hasValue, boolean hasData) {
         List<Template> list = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -91,7 +93,7 @@ public class DynamicDataFactory {
         return list;
     }
 
-    private static String setFormatJson(List<Template> list, boolean hasValue, boolean hasData) {
+    public static String setFormatJson(List<Template> list, boolean hasValue, boolean hasData) {
         JSONObject jsonObject = new JSONObject();
         if (list != null && list.size() > 0) {
             try {

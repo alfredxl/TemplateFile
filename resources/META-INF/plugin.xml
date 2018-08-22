@@ -28,7 +28,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <applicationConfigurable instance="com.alfredxl.templatefile.dialog.SettingConfig"/>
+        <applicationConfigurable instance="com.alfredxl.templatefile.SettingConfig"/>
     </extensions>
 
     <actions>
