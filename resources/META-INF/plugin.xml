@@ -33,7 +33,7 @@
 
     <actions>
         <action id="com.alfredxl.templatefile.TemplateFilePlugin" class="com.alfredxl.templatefile.TemplateFilePlugin"
-                text="TemplateFile"
+                text="TemplateFile" icon="/image/icon.png"
                 description="TemplateFileWrite">
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>

@@ -7,8 +7,8 @@ import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jdesktop.swingx.VerticalLayout;
 
 import javax.swing.*;
@@ -84,6 +84,7 @@ public class SettingJPanel extends JPanel {
     public void addData(List<Template> defaultDynamicList, List<Template> dynamicList, List<Template> templateList) {
         if (configJPanel != null) {
             configJPanel.addData(defaultDynamicList, dynamicList, templateList);
+            setModified(true);
         }
     }
 

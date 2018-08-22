@@ -3,9 +3,9 @@ package com.alfredxl.templatefile.factory;
 import com.alfredxl.templatefile.bean.Template;
 import com.alfredxl.templatefile.constant.Constants;
 import com.intellij.ide.util.PropertiesComponent;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class DynamicDataFactory {
 
     public static List<Template> getDefaultDynamicData(FormatFactory formatFactory) {
         List<Template> defaultList = new ArrayList<>();
-        defaultList.add(new Template(true, "$BD$",
+        defaultList.add(new Template(true, "$MBD$",
                 formatFactory != null ? formatFactory.getBaseDir() : Constants.BASE_DIR));
         defaultList.add(new Template(true, "$CDS$",
                 formatFactory != null ? formatFactory.getCurrentPath() : Constants.CURRENT_PATH));
