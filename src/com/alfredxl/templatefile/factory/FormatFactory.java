@@ -34,14 +34,21 @@ public class FormatFactory {
     public String formatData(List<Template> dynamicList, List<Template> defaultDynamicList, String data) {
         for (Template template : defaultDynamicList) {
             if (template.isEnabled()) {
-                data = data.replace(template.getKey(), template.getValue());
+                data = conversion(template.getKey(), template.getValue(), data);
             }
         }
         for (Template template : dynamicList) {
             if (template.isEnabled()) {
-                data = data.replace(template.getKey(), template.getValue());
+                data = conversion(template.getKey(), template.getValue(), data);
             }
         }
+        return data;
+    }
+
+    private String conversion(String key, String value, String data) {
+        String tempKey = "^" + key + "^";
+        data = data.replace(tempKey, value.toLowerCase());
+        data = data.replace(key, value.toLowerCase());
         return data;
     }
 }
