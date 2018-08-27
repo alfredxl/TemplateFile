@@ -21,3 +21,5 @@
 [示例配置模板(保存到文本文件)](config/templateConfiguration.txt)
 
 3. 按照上述示例，即可使用.    
+
+4. [详细使用文档](https://blog.csdn.net/vv765947965/article/details/82109676)
