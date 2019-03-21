@@ -15,7 +15,8 @@ Gradle缓存清除
 - 本插件可以清除Gradle缓存
 
 ## 下载插件    
-1. 打开IDEA，搜索插件templateFile，并安装；   
+1. 打开IDEA，搜索插件templateFile，并安装；
+ 或者直接下载到本地[templateFile](https://raw.githubusercontent.com/alfredxl/TemplateFile/master/TemplateFile.zip)，再使用IDEA导入插件  
 
 ![安装插件](image/20180824175845.png)      
 
