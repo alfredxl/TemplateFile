@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.alfredxl.templatefile</id>
     <name>TemplateFile</name>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <vendor email="32038305@qq.com" url="https://github.com/alfredxl/TemplateFile">No Company</vendor>
 
     <description><![CDATA[
@@ -12,7 +12,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      open to enable plugin in all products.<br>
+      <ul>
+        <li>添加清除Gradle缓存的功能</li>
+      </ul>
+      <a href="https://github.com/alfredxl/TemplateFile/blob/master/README.md"><b>Full Changelog History</b></a>
     ]]>
     </change-notes>
 
@@ -25,7 +28,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <applicationConfigurable instance="com.alfredxl.templatefile.SettingConfig"/>
+        <applicationConfigurable groupId="templateFile" instance="com.alfredxl.templatefile.SettingConfig"/>
+        <applicationConfigurable groupId="gradleCachePath" instance="com.alfredxl.templatefile.GradleDirectoryConfig"/>
     </extensions>
 
     <actions>
@@ -33,6 +37,14 @@
                 text="TemplateFile" icon="/image/icon.png"
                 description="TemplateFileWrite">
             <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+    </actions>
+    <actions>
+        <action id="com.alfredxl.templatefile.UpdateGradleLibPlugin" class="com.alfredxl.templatefile.UpdateGradleLibPlugin"
+                text="更新依赖" icon="/image/updatemandatory.png"
+                description="强制更新指定依赖">
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="NavBarToolBar" anchor="last"/>
         </action>
     </actions>
 

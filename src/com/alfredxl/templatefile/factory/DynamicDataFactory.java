@@ -2,6 +2,7 @@ package com.alfredxl.templatefile.factory;
 
 import com.alfredxl.templatefile.bean.Template;
 import com.alfredxl.templatefile.constant.Constants;
+import com.intellij.ide.util.PackageUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +15,7 @@ import java.util.Vector;
 public class DynamicDataFactory {
     private static final String DYNAMIC_DATA = "com.alfredxl.templatefile.factory.dynamic.data";
     private static final String TEMPLATE_DATA = "com.alfredxl.templatefile.factory.template.data";
+    private static final String GRADLE_DATA = "com.alfredxl.templatefile.factory.gradle.data";
 
 
     public static Vector<String> getTitle(boolean showFormatCode) {
@@ -65,6 +67,14 @@ public class DynamicDataFactory {
 
     public static void setTemplateData(List<Template> list) {
         PropertiesComponent.getInstance().setValue(TEMPLATE_DATA, setFormatJson(list, true, true));
+    }
+
+    public static String getGradleCachePath(){
+        return PropertiesComponent.getInstance().getValue(GRADLE_DATA, "");
+    }
+
+    public static void setGradleCachePath(String path){
+        PropertiesComponent.getInstance().setValue(GRADLE_DATA, path);
     }
 
 
