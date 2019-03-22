@@ -4,7 +4,7 @@
 新增了gradle缓存清除功能，达到强制重新下载gradle依赖的问题
 
 ## 演示
-Gradle缓存清除
+Gradle缓存清除，注意清除缓存后需要手动点击gradle同步按钮
 ![演示](image/清除gradle缓存.gif)
 
 模板文件自动生成
