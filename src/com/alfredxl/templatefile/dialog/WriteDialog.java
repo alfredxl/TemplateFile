@@ -27,8 +27,8 @@ public class WriteDialog extends JFrame implements ActionListener {
     private void initView() {
         JPanel jPanelMain = new JPanel(new VerticalLayout(2));
         jPanelContent = new ConfigJPanel(true, formatFactory);
-        JBScrollPane jScrollPane = new JBScrollPane(jPanelContent);
-        jScrollPane.setPreferredSize(new Dimension(1550, 900));
+        JBScrollPane jScrollPane = new JBScrollPane(jPanelContent, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        jScrollPane.setPreferredSize(new Dimension(1250, 800));
         jPanelMain.add(jScrollPane);
         JPanel bottomJPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 2));
         JButton jButtonOK = new JButton("OK");
