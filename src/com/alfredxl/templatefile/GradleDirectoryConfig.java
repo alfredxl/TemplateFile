@@ -28,8 +28,8 @@ public class GradleDirectoryConfig implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        JBPanel component = new JBPanel(new VerticalLayout(10));
-        JBPanel jbPanel = new JBPanel(new FlowLayout(FlowLayout.LEFT));
+        JBPanel<?> component = new JBPanel<>(new VerticalLayout(10));
+        JBPanel<?> jbPanel = new JBPanel<>(new FlowLayout(FlowLayout.LEFT));
         jbPanel.add(new JBLabel("gradle缓存路径:  "));
         jbTextField = new JBTextField(DynamicDataFactory.getGradleCachePath(), 40);
         jbPanel.add(jbTextField);
@@ -58,7 +58,7 @@ public class GradleDirectoryConfig implements Configurable {
         }
     }
 
-    abstract class SimpleDocumentListener implements DocumentListener {
+    static abstract class SimpleDocumentListener implements DocumentListener {
         @Override
         public void insertUpdate(DocumentEvent e) {
             change();

@@ -45,8 +45,8 @@ public class WriteFile {
 
 
     private static VirtualFile createFolderIfNotExist(Project project, String folder) throws IOException {
-        VirtualFile directory = project.getBaseDir();
-        if (folder.startsWith(directory.getPath())) {
+        VirtualFile directory = project.getProjectFile();
+        if (directory != null && folder.startsWith(directory.getPath())) {
             folder = folder.substring(directory.getPath().length() + 1);
             String[] folders = folder.split("/");
             for (String childFolder : folders) {

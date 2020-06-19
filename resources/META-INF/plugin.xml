@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.alfredxl.templatefile</id>
     <name>TemplateFile</name>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <vendor email="32038305@qq.com" url="https://github.com/alfredxl/TemplateFile">No Company</vendor>
 
     <description><![CDATA[
@@ -14,15 +14,15 @@
 
     <change-notes><![CDATA[
       <ul>
-        <li>Add clear Gradle cache function</li>
-        <li>添加清除Gradle缓存的功能</li>
+        <li>update outdated methods</li>
+        <li>更新过时方法</li>
       </ul>
       <a href="https://github.com/alfredxl/TemplateFile/blob/master/README.md"><b>Full Changelog History</b></a>
     ]]>
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="173.0"/>
+    <idea-version since-build="201"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
